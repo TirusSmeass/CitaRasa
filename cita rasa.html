@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CITA RASA – Platform Inkubasi UMKM Budaya</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    /* Warna hangat budaya Indonesia */
+    :root {
+      --coklat: #8B5A2B;
+      --coklat-muda: #A67B5B;
+      --krem: #FDF8F0;
+      --oranye: #E67E22;
+      --oranye-tua: #C2410C;
+    }
+
+    body {
+      background: linear-gradient(135deg, #FDF8F0 0%, #FEF7E9 100%);
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    /* Card styling */
+    .card {
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px -10px rgba(139, 90, 43, 0.15);
+      border: 1px solid #F0E1C6;
+      transition: all 0.3s;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px -10px rgba(194, 65, 12, 0.25);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #C2410C, #E67E22);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s;
+      display: inline-block;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px -5px rgba(194, 65, 12, 0.4);
+    }
+
+    .btn-wa {
+      background: #25D366;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s;
+      display: inline-block;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-wa:hover {
+      background: #128C7E;
+      transform: scale(1.05);
+    }
+
+    /* Navigasi */
+    .nav-link {
+      color: #5D3A1A;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 50px;
+      transition: all 0.3s;
+    }
+
+    .nav-link:hover {
+      background: #E6D5B8;
+      color: #C2410C;
+    }
+
+    .nav-link.active {
+      background: #C2410C;
+      color: white;
+    }
+
+    /* Page styling */
+    .page {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .back-button {
+      position: fixed;
+      top: 100px;
+      left: 30px;
+      background: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      cursor: pointer;
+      z-index: 50;
+      border: 2px solid #C2410C;
+    }
+
+    .back-button:hover {
+      background: #C2410C;
+      color: white;
+    }
+
+    .badge-gold {
+      background: linear-gradient(135deg, #FFD700, #FDB931);
+      color: #5D3A1A;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-weight: bold;
+    }
+
+    .badge-silver {
+      background: linear-gradient(135deg, #C0C0C0, #E8E8E8);
+      color: #2C3E50;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-weight: bold;
+    }
+
+    .badge-bronze {
+      background: linear-gradient(135deg, #CD7F32, #B87333);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-weight: bold;
+    }
+
+    /* Loading */
+    .loading {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border: 3px solid #F0E1C6;
+      border-top: 3px solid #C2410C;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Back Button -->
+  <div id="backButton" class="back-button hidden" onclick="navigateTo('home')">
+    <i class="fas fa-arrow-left text-xl"></i>
+  </div>
+
+  <!-- ==================== NAVIGASI ==================== -->
+  <nav class="bg-white/80 backdrop-blur-md fixed top-0 left-0 right-0 z-40 shadow-sm">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <a href="#" onclick="navigateTo('home')" class="text-2xl font-bold text-[#C2410C]">CITA RASA</a>
+
+        <!-- Menu Desktop -->
+        <div class="hidden md:flex items-center space-x-2">
+          <a href="#" onclick="navigateTo('home')" class="nav-link" id="nav-home">Beranda</a>
+          <a href="#" onclick="navigateTo('profil')" class="nav-link" id="nav-profil">Profil</a>
+          <a href="#" onclick="navigateTo('literasi')" class="nav-link" id="nav-literasi">Literasi</a>
+          <a href="#" onclick="navigateTo('builder')" class="nav-link" id="nav-builder">Builder</a>
+          <a href="#" onclick="navigateTo('ai')" class="nav-link" id="nav-ai">AI</a>
+          <a href="#" onclick="navigateTo('analyzer')" class="nav-link" id="nav-analyzer">Analyzer</a>
+          <a href="#" onclick="navigateTo('dashboard')" class="nav-link" id="nav-dashboard">Dashboard</a>
+          <a href="#" onclick="navigateTo('toko')" class="nav-link" id="nav-toko">Toko</a>
+          <a href="#" onclick="navigateTo('reward')" class="nav-link" id="nav-reward">Reward</a>
+          <a href="#" onclick="navigateTo('leaderboard')" class="nav-link" id="nav-leaderboard">Leaderboard</a>
+        </div>
+
+        <!-- User Info -->
+        <div class="flex items-center space-x-3">
+          <span class="bg-[#C2410C] text-white px-4 py-2 rounded-full text-sm font-semibold">
+            ⭐ 1.250 Poin
+          </span>
+          <div class="w-10 h-10 bg-[#8B5A2B] rounded-full flex items-center justify-center text-white">
+            <i class="fas fa-user"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="h-16"></div> <!-- Spacer -->
+
+  <!-- ==================== HALAMAN HOME ==================== -->
+  <div id="page-home" class="page active">
+    <div class="container mx-auto px-4 py-8">
+      <!-- Hero Section -->
+      <div class="card p-8 mb-8 bg-gradient-to-r from-[#8B5A2B] to-[#C2410C] text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mt-20 -mr-20"></div>
+        <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -mb-16 -ml-16"></div>
+        <div class="relative z-10 max-w-3xl">
+          <h1 class="text-4xl md:text-5xl font-bold mb-4">CITA RASA</h1>
+          <p class="text-xl mb-6">Platform Inkubasi Digital UMKM Berbasis Storytelling Budaya dengan AI</p>
+          <div class="flex gap-4">
+            <button onclick="navigateTo('toko')" class="bg-white text-[#C2410C] px-6 py-3 rounded-full font-semibold hover:scale-105 transition">
+              🛒 Belanja Sekarang
+            </button>
+            <button onclick="navigateTo('ai')" class="bg-white/20 backdrop-blur px-6 py-3 rounded-full font-semibold hover:bg-white/30 transition">
+              🤖 Coba AI Gratis
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistik -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="card p-4 text-center">
+          <div class="text-3xl font-bold text-[#C2410C]">150+</div>
+          <div class="text-gray-600">UMKM Binaan</div>
+        </div>
+        <div class="card p-4 text-center">
+          <div class="text-3xl font-bold text-[#C2410C]">82</div>
+          <div class="text-gray-600">Skor Rata-rata</div>
+        </div>
+        <div class="card p-4 text-center">
+          <div class="text-3xl font-bold text-[#C2410C]">30+</div>
+          <div class="text-gray-600">Kota di RI</div>
+        </div>
+        <div class="card p-4 text-center">
+          <div class="text-3xl font-bold text-[#C2410C]">5.2K</div>
+          <div class="text-gray-600">Transaksi</div>
+        </div>
+      </div>
+
+      <!-- Fitur Unggulan -->
+      <h2 class="text-2xl font-bold mb-4 text-[#8B5A2B]">🌟 Fitur Unggulan</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div class="card p-4 text-center cursor-pointer hover:shadow-lg" onclick="navigateTo('profil')">
+          <i class="fas fa-store text-3xl text-[#C2410C] mb-2"></i>
+          <h3 class="font-bold">Profil UMKM</h3>
+          <p class="text-xs text-gray-500">Identitas produk</p>
+        </div>
+        <div class="card p-4 text-center cursor-pointer hover:shadow-lg" onclick="navigateTo('literasi')">
+          <i class="fas fa-book-open text-3xl text-[#C2410C] mb-2"></i>
+          <h3 class="font-bold">Modul Literasi</h3>
+          <p class="text-xs text-gray-500">Edukasi branding</p>
+        </div>
+        <div class="card p-4 text-center cursor-pointer hover:shadow-lg" onclick="navigateTo('builder')">
+          <i class="fas fa-pen-fancy text-3xl text-[#C2410C] mb-2"></i>
+          <h3 class="font-bold">Storytelling</h3>
+          <p class="text-xs text-gray-500">Bangun cerita</p>
+        </div>
+        <div class="card p-4 text-center cursor-pointer hover:shadow-lg" onclick="navigateTo('ai')">
+          <i class="fas fa-robot text-3xl text-[#C2410C] mb-2"></i>
+          <h3 class="font-bold">AI Assistant</h3>
+          <p class="text-xs text-gray-500">Generate teks</p>
+        </div>
+        <div class="card p-4 text-center cursor-pointer hover:shadow-lg" onclick="navigateTo('reward')">
+          <i class="fas fa-gift text-3xl text-[#C2410C] mb-2"></i>
+          <h3 class="font-bold">Reward</h3>
+          <p class="text-xs text-gray-500">Tukar poin</p>
+        </div>
+      </div>
+
+      <!-- Produk Unggulan -->
+      <h2 class="text-2xl font-bold mt-8 mb-4 text-[#8B5A2B]">🔥 Produk Unggulan</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="card">
+          <img src="rendang.jpg" 
+               class="w-full h-48 object-cover" 
+               alt="Rendang Padang">
+          <div class="p-4">
+            <h3 class="font-bold">Rendang Padang</h3>
+            <p class="text-sm text-gray-600">Dapur Uni</p>
+            <div class="flex items-center mt-1">
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <span class="text-xs ml-1">(210)</span>
+            </div>
+            <p class="text-[#C2410C] font-bold mt-2">Rp 75.000</p>
+            <p class="text-xs text-gray-500">🎁 120 poin</p>
+            <button class="btn-wa w-full mt-3 text-sm" onclick="window.open('https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Rendang%20Padang','_blank')">
+              <i class="fab fa-whatsapp mr-1"></i> Chat WA
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="batik.jpg" 
+               class="w-full h-48 object-cover" 
+               alt="Batik Cirebon">
+          <div class="p-4">
+            <h3 class="font-bold">Batik Megamendung</h3>
+            <p class="text-sm text-gray-600">Batik Tulis Cirebon</p>
+            <div class="flex items-center mt-1">
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <span class="text-xs ml-1">(150)</span>
+            </div>
+            <p class="text-[#C2410C] font-bold mt-2">Rp 350.000</p>
+            <p class="text-xs text-gray-500">🎁 500 poin</p>
+            <button class="btn-wa w-full mt-3 text-sm" onclick="window.open('https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Batik%20Megamendung','_blank')">
+              <i class="fab fa-whatsapp mr-1"></i> Chat WA
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="kopi.jpg" 
+               class="w-full h-48 object-cover" 
+               alt="Kopi Toraja">
+          <div class="p-4">
+            <h3 class="font-bold">Kopi Toraja</h3>
+            <p class="text-sm text-gray-600">Toraja Coffindo</p>
+            <div class="flex items-center mt-1">
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <span class="text-xs ml-1">(98)</span>
+            </div>
+            <p class="text-[#C2410C] font-bold mt-2">Rp 85.000</p>
+            <p class="text-xs text-gray-500">🎁 150 poin</p>
+            <button class="btn-wa w-full mt-3 text-sm" onclick="window.open('https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Kopi%20Toraja','_blank')">
+              <i class="fab fa-whatsapp mr-1"></i> Chat WA
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN PROFIL UMKM ==================== -->
+  <div id="page-profil" class="page">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-6 text-[#8B5A2B]">🏪 Profil UMKM</h1>
+      
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Foto Produk -->
+        <div class="md:col-span-1">
+          <div class="card p-4">
+            <img src="keripik 2 bal.jpg" 
+                 class="w-full h-64 object-cover rounded-xl mb-4" 
+                 alt="Keripik Pedas Manis">
+            <h2 class="text-xl font-bold">Keripik Pedas Manis</h2>
+            <p class="text-gray-600">Keripik Jatmiko</p>
+            <div class="flex items-center mt-2">
+              <i class="fas fa-star text-yellow-400"></i>
+              <i class="fas fa-star text-yellow-400"></i>
+              <i class="fas fa-star text-yellow-400"></i>
+              <i class="fas fa-star text-yellow-400"></i>
+              <i class="fas fa-star text-yellow-400"></i>
+              <span class="ml-2 text-gray-600">(150 ulasan)</span>
+            </div>
+            <div class="text-2xl font-bold text-[#C2410C] mt-4">Rp 25.000</div>
+            <p class="text-sm text-gray-500 mt-1">🎁 40 poin dari pembelian</p>
+            
+            <!-- Kontak WA -->
+            <button class="btn-wa w-full mt-4" onclick="window.open('https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Keripik%20Pedas%20Manis','_blank')">
+              <i class="fab fa-whatsapp mr-2"></i> Chat via WhatsApp
+            </button>
+          </div>
+        </div>
+
+        <!-- Detail Produk -->
+        <div class="md:col-span-2">
+          <div class="card p-6 mb-4">
+            <h3 class="text-xl font-bold mb-4">📖 Cerita Produk</h3>
+            <p class="text-gray-700 leading-relaxed">
+              "Keripik Jatmiko lahir dari kecintaan Ibu Jatmiko pada kuliner tradisional Jawa Timur. 
+              Resep ini diwariskan dari neneknya sejak tahun 1950-an. Filosofi 'Jer Basuki Mawa Bea' 
+              (kesuksesan butuh pengorbanan) menjadi pegangan - proses teliti menghasilkan keripik berkualitas."
+            </p>
+          </div>
+
+          <div class="card p-6">
+            <h3 class="text-xl font-bold mb-4">📋 Spesifikasi Produk</h3>
+            <table class="w-full">
+              <tr class="border-b border-gray-100">
+                <td class="py-3 font-semibold w-1/3">Asal Daerah</td>
+                <td>Malang, Jawa Timur</td>
+              </tr>
+              <tr class="border-b border-gray-100">
+                <td class="py-3 font-semibold">Bahan Utama</td>
+                <td>Singkong pilihan, cabai merah, gula aren, bawang putih</td>
+              </tr>
+              <tr class="border-b border-gray-100">
+                <td class="py-3 font-semibold">Keunikan</td>
+                <td>Bumbu meresap hingga ke dalam, renyah tahan 2 minggu</td>
+              </tr>
+              <tr class="border-b border-gray-100">
+                <td class="py-3 font-semibold">Nilai Budaya</td>
+                <td>Filosofi "Jer Basuki Mawa Bea" - kesuksesan butuh pengorbanan</td>
+              </tr>
+              <tr class="border-b border-gray-100">
+                <td class="py-3 font-semibold">Berat</td>
+                <td>250 gram</td>
+              </tr>
+              <tr>
+                <td class="py-3 font-semibold">Varian Rasa</td>
+                <td>Original, Pedas Manis, Balado, Keju</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Produk Lainnya -->
+      <h2 class="text-2xl font-bold mt-8 mb-4 text-[#8B5A2B]">📦 Produk Lainnya dari Penjual</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="card p-3">
+          <img src="https://images.unsplash.com/photo-1625398408402-3d4e9b394f0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+               class="w-full h-40 object-cover rounded-lg" 
+               alt="Keripik Balado">
+          <h4 class="font-bold mt-2">Keripik Balado</h4>
+          <p class="text-[#C2410C] font-bold">Rp 27.000</p>
+          <p class="text-xs text-gray-500">🎁 45 poin</p>
+        </div>
+        <div class="card p-3">
+          <img src="https://images.unsplash.com/photo-1625398408402-3d4e9b394f0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+               class="w-full h-40 object-cover rounded-lg" 
+               alt="Keripik Keju">
+          <h4 class="font-bold mt-2">Keripik Keju</h4>
+          <p class="text-[#C2410C] font-bold">Rp 28.000</p>
+          <p class="text-xs text-gray-500">🎁 45 poin</p>
+        </div>
+        <div class="card p-3">
+          <img src="https://images.unsplash.com/photo-1625398408402-3d4e9b394f0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+               class="w-full h-40 object-cover rounded-lg" 
+               alt="Keripik Original">
+          <h4 class="font-bold mt-2">Keripik Original</h4>
+          <p class="text-[#C2410C] font-bold">Rp 23.000</p>
+          <p class="text-xs text-gray-500">🎁 35 poin</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN LITERASI ==================== -->
+  <div id="page-literasi" class="page">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-6 text-[#8B5A2B]">📚 Modul Literasi UMKM</h1>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="card p-6">
+          <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+               class="w-full h-40 object-cover rounded-xl mb-4" 
+               alt="Branding UMKM">
+          <div class="bg-[#FEF9E7] p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+            <span class="text-xl font-bold text-[#C2410C]">1</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Dasar-Dasar Branding UMKM</h3>
+          <p class="text-gray-600 mb-4">Pelajari cara membangun brand yang kuat untuk produk Anda.</p>
+          <ul class="space-y-2 text-sm">
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-[#C2410C] mt-1"></i>
+              <span>Apa itu brand dan mengapa penting untuk UMKM</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-[#C2410C] mt-1"></i>
+              <span>Elemen brand (nama, logo, warna, tagline)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-[#C2410C] mt-1"></i>
+              <span>Studi kasus brand UMKM sukses</span>
+            </li>
+          </ul>
+          <button class="text-[#C2410C] font-semibold mt-4 hover:underline">Mulai Belajar →</button>
+        </div>
+
+        <div class="card p-6">
+          <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+               class="w-full h-40 object-cover rounded-xl mb-4" 
+               alt="Storytelling">
+          <div class="bg-[#FEF9E7] p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+            <span class="text-xl font-bold text-[#C2410C]">2</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Storytelling Budaya</h3>
+          <p class="text-gray-600 mb-4">Teknik menulis cerita produk yang memikat dengan nilai budaya.</p>
+          <ul class="space-y-2 text-sm">
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-[#C2410C] mt-1"></i>
+              <span>Menggali nilai budaya lokal dalam produk</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-[#C2410C] mt-1"></i>
+              <span>Struktur cerita yang menarik</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-[#C2410C] mt-1"></i>
+              <span>Contoh storytelling produk sukses</span>
+            </li>
+          </ul>
+          <button class="text-[#C2410C] font-semibold mt-4 hover:underline">Mulai Belajar →</button>
+        </div>
+
+        <div class="card p-6">
+          <img src="https://images.unsplash.com/photo-1522204523234-8729aa95e3d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+               class="w-full h-40 object-cover rounded-xl mb-4" 
+               alt="Fotografi Produk">
+          <div class="bg-[#FEF9E7] p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+            <span class="text-xl font-bold text-[#C2410C]">3</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Fotografi Produk dengan Nuansa Budaya</h3>
+          <p class="text-gray-600 mb-4">Teknik foto produk menggunakan smartphone dengan latar tradisional.</p>
+          <ul class="space-y-2 text-sm">
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-[#C2410C] mt-1"></i>
+              <span>Pencahayaan alami dan properti tradisional</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-[#C2410C] mt-1"></i>
+              <span>Komposisi foto yang menarik</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-[#C2410C] mt-1"></i>
+              <span>Editing sederhana dengan aplikasi gratis</span>
+            </li>
+          </ul>
+          <button class="text-[#C2410C] font-semibold mt-4 hover:underline">Mulai Belajar →</button>
+        </div>
+
+        <div class="card p-6">
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+               class="w-full h-40 object-cover rounded-xl mb-4" 
+               alt="Digital Marketing">
+          <div class="bg-[#FEF9E7] p-3 rounded-full w-12 h-12 flex items-center justify-center mb-4">
+            <span class="text-xl font-bold text-[#C2410C]">4</span>
+          </div>
+          <h3 class="text-xl font-bold mb-2">Digital Marketing untuk UMKM</h3>
+          <p class="text-gray-600 mb-4">Strategi promosi di media sosial dan marketplace.</p>
+          <ul class="space-y-2 text-sm">
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-[#C2410C] mt-1"></i>
+              <span>Instagram & TikTok untuk UMKM</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-[#C2410C] mt-1"></i>
+              <span>Optimasi toko online di Shopee/Tokopedia</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check-circle text-[#C2410C] mt-1"></i>
+              <span>Iklan murah meriah untuk pemula</span>
+            </li>
+          </ul>
+          <button class="text-[#C2410C] font-semibold mt-4 hover:underline">Mulai Belajar →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN STORYTELLING BUILDER ==================== -->
+  <div id="page-builder" class="page">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-6 text-[#8B5A2B]">✍️ Storytelling Builder</h1>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="card p-6">
+          <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+               class="w-full h-40 object-cover rounded-xl mb-4" 
+               alt="Menulis Cerita">
+          <h3 class="text-xl font-bold mb-4">Masukkan Data Produk</h3>
+          <div class="space-y-4">
+            <input type="text" id="builderNama" placeholder="Nama Produk (contoh: Keripik Pedas Manis)" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#C2410C]">
+            <input type="text" id="builderDaerah" placeholder="Asal Daerah (contoh: Malang, Jawa Timur)" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#C2410C]">
+            <input type="text" id="builderBudaya" placeholder="Nilai Budaya (contoh: kebersamaan, gotong royong)" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#C2410C]">
+            <input type="text" id="builderBahan" placeholder="Bahan Utama (contoh: singkong, cabai)" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#C2410C]">
+            <input type="text" id="builderKeunikan" placeholder="Keunikan (contoh: resep turun-temurun)" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#C2410C]">
+            <button onclick="buildStory()" class="btn-primary w-full">✨ Buat Cerita</button>
+          </div>
+        </div>
+
+        <div class="card p-6">
+          <h3 class="text-xl font-bold mb-4">📖 Hasil Cerita</h3>
+          <div id="builderOutput" class="bg-[#FEF9E7] p-6 rounded-xl min-h-[300px] text-gray-700">
+            <p class="text-gray-400 italic text-center">Isi data produk di samping, lalu klik "Buat Cerita"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN AI STORY ASSISTANT ==================== -->
+  <div id="page-ai" class="page">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-6 text-[#8B5A2B]">🤖 AI Story Assistant</h1>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="card p-6">
+          <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+               class="w-full h-40 object-cover rounded-xl mb-4" 
+               alt="AI Assistant">
+          <h3 class="text-xl font-bold mb-4">Data Produk UMKM</h3>
+          <div class="space-y-4">
+            <input type="text" id="aiNama" placeholder="Nama Produk" class="w-full p-3 border border-gray-200 rounded-xl">
+            <input type="text" id="aiDaerah" placeholder="Asal Daerah" class="w-full p-3 border border-gray-200 rounded-xl">
+            <textarea id="aiDeskripsi" rows="2" placeholder="Deskripsi Singkat" class="w-full p-3 border border-gray-200 rounded-xl"></textarea>
+            <input type="text" id="aiBahan" placeholder="Bahan Utama" class="w-full p-3 border border-gray-200 rounded-xl">
+            <input type="text" id="aiBudaya" placeholder="Nilai Budaya" class="w-full p-3 border border-gray-200 rounded-xl">
+            
+            <div class="flex gap-3">
+              <button onclick="generateDeskripsi()" class="btn-primary flex-1">Generate Deskripsi</button>
+              <button onclick="generateTagline()" class="bg-[#8B5A2B] text-white px-4 py-3 rounded-xl flex-1 hover:bg-[#A67B5B] transition">Generate Tagline</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card p-6">
+          <h3 class="text-xl font-bold mb-4">✨ Hasil Rekomendasi AI</h3>
+          <div id="aiLoading" class="hidden flex justify-center mb-4">
+            <div class="loading"></div>
+          </div>
+          <div id="aiOutput" class="bg-[#FEF9E7] p-6 rounded-xl min-h-[300px]">
+            <p id="aiResultText" class="text-gray-700 leading-relaxed"></p>
+            <p id="aiTaglineResult" class="text-2xl font-bold text-[#C2410C] mt-4 text-center"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN CULTURAL ANALYZER ==================== -->
+  <div id="page-analyzer" class="page">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-6 text-[#8B5A2B]">📊 Cultural Analyzer</h1>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="card p-6">
+          <img src="batik.jpg" 
+               class="w-full h-40 object-cover rounded-xl mb-4" 
+               alt="Analisis Budaya">
+          <h3 class="text-xl font-bold mb-4">Analisis Kekuatan Budaya</h3>
+          <textarea id="analyzerInput" rows="4" placeholder="Masukkan deskripsi produk atau kata kunci budaya (pisahkan dengan koma)&#10;Contoh: batik, filosofi, tradisi, warisan, leluhur" class="w-full p-3 border border-gray-200 rounded-xl mb-4"></textarea>
+          <button onclick="analyzeCulture()" class="btn-primary w-full">Hitung Skor Budaya</button>
+        </div>
+
+        <div class="card p-6 flex flex-col items-center justify-center">
+          <div id="analyzerScore" class="text-6xl font-bold text-[#C2410C] mb-4">0</div>
+          <div id="analyzerLevel" class="text-xl text-gray-600 mb-4 text-center"></div>
+          <div class="w-full bg-gray-200 h-4 rounded-full overflow-hidden">
+            <div id="analyzerBar" class="bg-gradient-to-r from-[#8B5A2B] to-[#C2410C] h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <div class="mt-6 text-sm text-gray-500 text-center">
+            <p>Skor 0-30: Perlu Pengembangan</p>
+            <p>Skor 31-70: Cukup (Perlu Penguatan)</p>
+            <p>Skor 71-100: Kuat (Siap Dipasarkan)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN DASHBOARD DAMPAK ==================== -->
+  <div id="page-dashboard" class="page">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-6 text-[#8B5A2B]">📈 Dashboard Dampak</h1>
+      
+      <div class="grid md:grid-cols-3 gap-6 mb-8">
+        <div class="card p-6 text-center">
+          <i class="fas fa-store text-4xl text-[#C2410C] mb-4"></i>
+          <div class="text-4xl font-bold" id="statUmkm">150</div>
+          <div class="text-gray-600">UMKM Binaan</div>
+          <div class="text-sm text-green-600 mt-2">↑ 12% bulan ini</div>
+        </div>
+        <div class="card p-6 text-center">
+          <i class="fas fa-star text-4xl text-[#C2410C] mb-4"></i>
+          <div class="text-4xl font-bold" id="statSkor">82</div>
+          <div class="text-gray-600">Rata-rata Skor Storytelling</div>
+          <div class="text-sm text-green-600 mt-2">↑ 5 poin</div>
+        </div>
+        <div class="card p-6 text-center">
+          <i class="fas fa-chart-line text-4xl text-[#C2410C] mb-4"></i>
+          <div class="text-4xl font-bold" id="statDigital">70%</div>
+          <div class="text-gray-600">Kesiapan Digital</div>
+          <div class="text-sm text-green-600 mt-2">↑ 8%</div>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="card p-6">
+          <h3 class="text-xl font-bold mb-4">📊 Grafik Perkembangan UMKM</h3>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between mb-1">
+                <span>Pertumbuhan Jumlah UMKM</span>
+                <span class="font-bold">+45%</span>
+              </div>
+              <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden">
+                <div class="bg-[#C2410C] h-3 rounded-full" style="width: 75%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <span>Peningkatan Skor Storytelling</span>
+                <span class="font-bold">+32%</span>
+              </div>
+              <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden">
+                <div class="bg-[#C2410C] h-3 rounded-full" style="width: 68%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1">
+                <span>Adopsi Digital</span>
+                <span class="font-bold">+28%</span>
+              </div>
+              <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden">
+                <div class="bg-[#C2410C] h-3 rounded-full" style="width: 60%"></div>
+              </div>
+            </div>
+          </div>
+          <button onclick="updateDashboard()" class="btn-primary w-full mt-6">
+            <i class="fas fa-sync-alt mr-2"></i> Update Data
+          </button>
+        </div>
+
+        <div class="card p-6">
+          <h3 class="text-xl font-bold mb-4">🏆 Pencapaian Terbaru</h3>
+          <div class="space-y-4">
+            <div class="flex items-center gap-3 p-3 bg-[#FEF9E7] rounded-xl">
+              <i class="fas fa-trophy text-2xl text-yellow-500"></i>
+              <div>
+                <p class="font-bold">150 UMKM Binaan</p>
+                <p class="text-sm text-gray-600">Tercapai bulan Maret 2025</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-[#FEF9E7] rounded-xl">
+              <i class="fas fa-star text-2xl text-yellow-500"></i>
+              <div>
+                <p class="font-bold">Skor Rata-rata 82</p>
+                <p class="text-sm text-gray-600">Meningkat 5 poin dari bulan lalu</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-[#FEF9E7] rounded-xl">
+              <i class="fas fa-chart-line text-2xl text-green-500"></i>
+              <div>
+                <p class="font-bold">5.200+ Transaksi</p>
+                <p class="text-sm text-gray-600">Total penjualan UMKM binaan</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN PROMOSI JUALAN (TOKO) ==================== -->
+  <div id="page-toko" class="page">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-6 text-[#8B5A2B]">🛒 Toko UMKM Indonesia</h1>
+      
+      <!-- Banner Promo -->
+      <div class="card p-6 mb-6 bg-gradient-to-r from-[#C2410C] to-[#E67E22] text-white">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-bold">🔥 GRATIS ONGKIR</h2>
+            <p>Setiap belanja minimal Rp 100.000</p>
+          </div>
+          <i class="fas fa-truck text-4xl opacity-50"></i>
+        </div>
+      </div>
+
+      <!-- Kategori -->
+      <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+        <button class="px-4 py-2 bg-[#C2410C] text-white rounded-full">Semua</button>
+        <button class="px-4 py-2 bg-white border border-gray-200 rounded-full">Kuliner</button>
+        <button class="px-4 py-2 bg-white border border-gray-200 rounded-full">Fashion</button>
+        <button class="px-4 py-2 bg-white border border-gray-200 rounded-full">Kerajinan</button>
+        <button class="px-4 py-2 bg-white border border-gray-200 rounded-full">Minuman</button>
+      </div>
+
+      <!-- Produk Unggulan -->
+      <h2 class="text-xl font-bold mb-4">🔥 Produu Unggulan</h2>
+      <div class="grid md:grid-cols-3 gap-6 mb-8">
+        <div class="card">
+          <img src="rendang.jpg" 
+               class="w-full h-48 object-cover" 
+               alt="Rendang">
+          <div class="p-4">
+            <h3 class="font-bold">Rendang Padang</h3>
+            <p class="text-sm text-gray-600">Dapur Uni</p>
+            <div class="flex items-center mt-1">
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <span class="text-xs ml-1">(210)</span>
+            </div>
+            <p class="text-[#C2410C] font-bold mt-2">Rp 75.000</p>
+            <p class="text-xs text-gray-500">🎁 120 poin</p>
+            <button class="btn-wa w-full mt-3 text-sm" onclick="window.open('https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Rendang%20Padang','_blank')">
+              <i class="fab fa-whatsapp mr-1"></i> Chat WA
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="batik.jpg" 
+               class="w-full h-48 object-cover" 
+               alt="Batik">
+          <div class="p-4">
+            <h3 class="font-bold">Batik Megamendung</h3>
+            <p class="text-sm text-gray-600">Batik Tulis Cirebon</p>
+            <div class="flex items-center mt-1">
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <span class="text-xs ml-1">(150)</span>
+            </div>
+            <p class="text-[#C2410C] font-bold mt-2">Rp 350.000</p>
+            <p class="text-xs text-gray-500">🎁 500 poin</p>
+            <button class="btn-wa w-full mt-3 text-sm" onclick="window.open('https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Batik%20Megamendung','_blank')">
+              <i class="fab fa-whatsapp mr-1"></i> Chat WA
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="toraja.jpg" 
+               class="w-full h-48 object-cover" 
+               alt="Kopi">
+          <div class="p-4">
+            <h3 class="font-bold">Kopi Toraja</h3>
+            <p class="text-sm text-gray-600">Toraja Coffindo</p>
+            <div class="flex items-center mt-1">
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <i class="fas fa-star text-yellow-400 text-sm"></i>
+              <span class="text-xs ml-1">(98)</span>
+            </div>
+            <p class="text-[#C2410C] font-bold mt-2">Rp 85.000</p>
+            <p class="text-xs text-gray-500">🎁 150 poin</p>
+            <button class="btn-wa w-full mt-3 text-sm" onclick="window.open('https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Kopi%20Toraja','_blank')">
+              <i class="fab fa-whatsapp mr-1"></i> Chat WA
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Semua Produk -->
+      <h2 class="text-xl font-bold mb-4">📦 Semua Produk</h2>
+      <div class="grid md:grid-cols-4 gap-4">
+        <div class="card p-3">
+          <img src="keripik 1.jpg" 
+               class="w-full h-32 object-cover rounded-lg" 
+               alt="Keripik Original">
+          <h4 class="font-bold mt-2 text-sm">Keripik Original</h4>
+          <p class="text-[#C2410C] font-bold">Rp 23.000</p>
+          <p class="text-xs">🎁 35 poin</p>
+        </div>
+        <div class="card p-3">
+          <img src="keripik 2 bal.jpg" 
+               class="w-full h-32 object-cover rounded-lg" 
+               alt="Keripik Balado">
+          <h4 class="font-bold mt-2 text-sm">Keripik Balado</h4>
+          <p class="text-[#C2410C] font-bold">Rp 27.000</p>
+          <p class="text-xs">🎁 40 poin</p>
+        </div>
+        <div class="card p-3">
+          <img src="keripik keju.jpg" 
+               class="w-full h-32 object-cover rounded-lg" 
+               alt="Keripik Keju">
+          <h4 class="font-bold mt-2 text-sm">Keripik Keju</h4>
+          <p class="text-[#C2410C] font-bold">Rp 28.000</p>
+          <p class="text-xs">🎁 45 poin</p>
+        </div>
+        <div class="card p-3">
+          <img src="batik.jpg" 
+               class="w-full h-32 object-cover rounded-lg" 
+               alt="Batik">
+          <h4 class="font-bold mt-2 text-sm">Batik Solo</h4>
+          <p class="text-[#C2410C] font-bold">Rp 250.000</p>
+          <p class="text-xs">🎁 400 poin</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN REWARD ==================== -->
+  <div id="page-reward" class="page">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-6 text-[#8B5A2B]">🎁 Reward Tukar Poin</h1>
+      
+      <div class="card p-6 mb-6 bg-gradient-to-r from-[#FEF9E7] to-white">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-600">Poin Anda</p>
+            <p class="text-4xl font-bold text-[#C2410C]">1.250</p>
+          </div>
+          <div class="bg-[#C2410C] p-3 rounded-full">
+            <i class="fas fa-star text-white text-3xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-xl font-bold mb-4">🎁 Reward Tersedia</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="card p-4 hover:shadow-lg transition">
+          <div class="bg-[#FEF9E7] p-3 rounded-full w-14 h-14 flex items-center justify-center mb-3">
+            <span class="text-2xl">🎫</span>
+          </div>
+          <h3 class="font-bold">Voucher Rp 10.000</h3>
+          <p class="text-sm text-gray-600 mb-2">Tukarkan poin untuk voucher belanja</p>
+          <p class="text-[#C2410C] font-bold text-xl">100 poin</p>
+          <button class="bg-[#8B5A2B] text-white px-4 py-2 rounded-xl w-full mt-3 hover:bg-[#A67B5B] transition">Tukar Sekarang</button>
+        </div>
+
+        <div class="card p-4 hover:shadow-lg transition">
+          <div class="bg-[#FEF9E7] p-3 rounded-full w-14 h-14 flex items-center justify-center mb-3">
+            <span class="text-2xl">🚚</span>
+          </div>
+          <h3 class="font-bold">Gratis Ongkir</h3>
+          <p class="text-sm text-gray-600 mb-2">Bebas ongkir 1x transaksi</p>
+          <p class="text-[#C2410C] font-bold text-xl">200 poin</p>
+          <button class="bg-[#8B5A2B] text-white px-4 py-2 rounded-xl w-full mt-3 hover:bg-[#A67B5B] transition">Tukar Sekarang</button>
+        </div>
+
+        <div class="card p-4 hover:shadow-lg transition">
+          <div class="bg-[#FEF9E7] p-3 rounded-full w-14 h-14 flex items-center justify-center mb-3">
+            <span class="text-2xl">🍲</span>
+          </div>
+          <h3 class="font-bold">Produk Gratis</h3>
+          <p class="text-sm text-gray-600 mb-2">1 Keripik Original gratis</p>
+          <p class="text-[#C2410C] font-bold text-xl">300 poin</p>
+          <button class="bg-[#8B5A2B] text-white px-4 py-2 rounded-xl w-full mt-3 hover:bg-[#A67B5B] transition">Tukar Sekarang</button>
+        </div>
+
+        <div class="card p-4 hover:shadow-lg transition">
+          <div class="bg-[#FEF9E7] p-3 rounded-full w-14 h-14 flex items-center justify-center mb-3">
+            <span class="text-2xl">🛍️</span>
+          </div>
+          <h3 class="font-bold">Paket Produk</h3>
+          <p class="text-sm text-gray-600 mb-2">3 varian keripik</p>
+          <p class="text-[#C2410C] font-bold text-xl">600 poin</p>
+          <button class="bg-[#8B5A2B] text-white px-4 py-2 rounded-xl w-full mt-3 hover:bg-[#A67B5B] transition">Tukar Sekarang</button>
+        </div>
+
+        <div class="card p-4 hover:shadow-lg transition">
+          <div class="bg-[#FEF9E7] p-3 rounded-full w-14 h-14 flex items-center justify-center mb-3">
+            <span class="text-2xl">👜</span>
+          </div>
+          <h3 class="font-bold">Merchandise</h3>
+          <p class="text-sm text-gray-600 mb-2">Totebag eksklusif</p>
+          <p class="text-[#C2410C] font-bold text-xl">1.000 poin</p>
+          <button class="bg-[#8B5A2B] text-white px-4 py-2 rounded-xl w-full mt-3 hover:bg-[#A67B5B] transition">Tukar Sekarang</button>
+        </div>
+
+        <div class="card p-4 hover:shadow-lg transition">
+          <div class="bg-[#FEF9E7] p-3 rounded-full w-14 h-14 flex items-center justify-center mb-3">
+            <span class="text-2xl">🍳</span>
+          </div>
+          <h3 class="font-bold">Cooking Class</h3>
+          <p class="text-sm text-gray-600 mb-2">Belajar masak offline</p>
+          <p class="text-[#C2410C] font-bold text-xl">2.000 poin</p>
+          <button class="bg-[#8B5A2B] text-white px-4 py-2 rounded-xl w-full mt-3 hover:bg-[#A67B5B] transition">Tukar Sekarang</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN LEADERBOARD ==================== -->
+  <div id="page-leaderboard" class="page">
+    <div class="container mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-6 text-[#8B5A2B]">🏆 Leaderboard</h1>
+      
+      <!-- Tab -->
+      <div class="flex gap-2 mb-6">
+        <button onclick="showLeaderboard('pembeli')" class="px-6 py-2 rounded-full bg-[#C2410C] text-white" id="tab-pembeli">Pembeli</button>
+        <button onclick="showLeaderboard('penjual')" class="px-6 py-2 rounded-full bg-gray-200 text-gray-700" id="tab-penjual">Penjual</button>
+      </div>
+
+      <!-- Leaderboard Pembeli -->
+      <div id="leaderboard-pembeli" class="block">
+        <div class="card p-6">
+          <div class="space-y-4">
+            <!-- Rank 1 -->
+            <div class="flex items-center justify-between p-4 bg-[#FEF9E7] rounded-xl">
+              <div class="flex items-center gap-4">
+                <span class="badge-gold w-8 h-8 flex items-center justify-center rounded-full">1</span>
+                <div>
+                  <p class="font-bold text-lg">Sari Wijaya</p>
+                  <p class="text-sm text-gray-600">Jakarta • Member sejak 2024</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-[#C2410C] text-xl">2.450</p>
+                <p class="text-xs">45 transaksi</p>
+              </div>
+            </div>
+
+            <!-- Rank 2 -->
+            <div class="flex items-center justify-between p-4">
+              <div class="flex items-center gap-4">
+                <span class="badge-silver w-8 h-8 flex items-center justify-center rounded-full">2</span>
+                <div>
+                  <p class="font-bold text-lg">Budi Santoso</p>
+                  <p class="text-sm text-gray-600">Surabaya • Member sejak 2024</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-[#C2410C] text-xl">1.890</p>
+                <p class="text-xs">32 transaksi</p>
+              </div>
+            </div>
+
+            <!-- Rank 3 -->
+            <div class="flex items-center justify-between p-4">
+              <div class="flex items-center gap-4">
+                <span class="badge-bronze w-8 h-8 flex items-center justify-center rounded-full">3</span>
+                <div>
+                  <p class="font-bold text-lg">Dwi Rahayu</p>
+                  <p class="text-sm text-gray-600">Bandung • Member sejak 2024</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-[#C2410C] text-xl">1.560</p>
+                <p class="text-xs">28 transaksi</p>
+              </div>
+            </div>
+
+            <!-- Rank 4 -->
+            <div class="flex items-center justify-between p-4">
+              <div class="flex items-center gap-4">
+                <span class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center font-bold">4</span>
+                <div>
+                  <p class="font-bold">Ahmad Fauzi</p>
+                  <p class="text-sm text-gray-600">Yogyakarta</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-bold">1.250</p>
+                <p class="text-xs">22 transaksi</p>
+              </div>
+            </div>
+
+            <!-- Rank 5 -->
+            <div class="flex items-center justify-between p-4">
+              <div class="flex items-center gap-4">
+                <span class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center font-bold">5</span>
+                <div>
+                  <p class="font-bold">Rina Permata</p>
+                  <p class="text-sm text-gray-600">Malang</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-bold">1.120</p>
+                <p class="text-xs">19 transaksi</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leaderboard Penjual (hidden by default) -->
+      <div id="leaderboard-penjual" class="hidden">
+        <div class="card p-6">
+          <div class="space-y-4">
+            <!-- Rank 1 -->
+            <div class="flex items-center justify-between p-4 bg-[#FEF9E7] rounded-xl">
+              <div class="flex items-center gap-4">
+                <span class="badge-gold w-8 h-8 flex items-center justify-center rounded-full">1</span>
+                <div>
+                  <p class="font-bold text-lg">Keripik Jatmiko</p>
+                  <p class="text-sm text-gray-600">Malang • 1.245 transaksi</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-[#C2410C] text-xl">3.450</p>
+                <p class="text-xs">poin penjual</p>
+              </div>
+            </div>
+
+            <!-- Rank 2 -->
+            <div class="flex items-center justify-between p-4">
+              <div class="flex items-center gap-4">
+                <span class="badge-silver w-8 h-8 flex items-center justify-center rounded-full">2</span>
+                <div>
+                  <p class="font-bold text-lg">Batik Tulis Cirebon</p>
+                  <p class="text-sm text-gray-600">Cirebon • 876 transaksi</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-[#C2410C] text-xl">2.890</p>
+                <p class="text-xs">poin penjual</p>
+              </div>
+            </div>
+
+            <!-- Rank 3 -->
+            <div class="flex items-center justify-between p-4">
+              <div class="flex items-center gap-4">
+                <span class="badge-bronze w-8 h-8 flex items-center justify-center rounded-full">3</span>
+                <div>
+                  <p class="font-bold text-lg">Kopi Toraja</p>
+                  <p class="text-sm text-gray-600">Toraja • 654 transaksi</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-[#C2410C] text-xl">2.560</p>
+                <p class="text-xs">poin penjual</p>
+              </div>
+            </div>
+
+            <!-- Rank 4 -->
+            <div class="flex items-center justify-between p-4">
+              <div class="flex items-center gap-4">
+                <span class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center font-bold">4</span>
+                <div>
+                  <p class="font-bold">Rendang Dapur Uni</p>
+                  <p class="text-sm text-gray-600">Padang</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-bold">2.120</p>
+                <p class="text-xs">489 transaksi</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-[#8B5A2B] text-white mt-12 py-8">
+    <div class="container mx-auto px-4">
+      <div class="grid md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">CITA RASA</h3>
+          <p class="text-sm text-[#F0E1C6]">Platform Inkubasi Digital UMKM Berbasis Storytelling Budaya dengan AI. Membantu UMKM Indonesia naik kelas.</p>
+        </div>
+        <div>
+          <h4 class="font-bold mb-4">Kontak</h4>
+          <p class="text-sm text-[#F0E1C6]"><i class="fas fa-phone mr-2"></i> 0812-3456-7890</p>
+          <p class="text-sm text-[#F0E1C6]"><i class="fas fa-envelope mr-2"></i> info@citarasa.id</p>
+          <p class="text-sm text-[#F0E1C6]"><i class="fas fa-map-marker mr-2"></i> Yogyakarta, Indonesia</p>
+        </div>
+        <div>
+          <h4 class="font-bold mb-4">Ikuti Kami</h4>
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 bg-[#A67B5B] rounded-full flex items-center justify-center hover:bg-[#C2410C] transition"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="w-10 h-10 bg-[#A67B5B] rounded-full flex items-center justify-center hover:bg-[#C2410C] transition"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="w-10 h-10 bg-[#A67B5B] rounded-full flex items-center justify-center hover:bg-[#C2410C] transition"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="text-center text-sm text-[#F0E1C6] mt-8 pt-4 border-t border-[#A67B5B]">
+        © 2025 CITA RASA. All rights reserved. | Platform Inkubasi UMKM Berbasis Budaya
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // Navigasi antar halaman
+    function navigateTo(page) {
+      // Sembunyikan semua halaman
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      
+      // Tampilkan halaman yang dipilih
+      document.getElementById(`page-${page}`).classList.add('active');
+      
+      // Tampilkan/sembunyikan back button
+      if (page === 'home') {
+        document.getElementById('backButton').classList.add('hidden');
+      } else {
+        document.getElementById('backButton').classList.remove('hidden');
+      }
+      
+      // Update active nav
+      document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+      if (document.getElementById(`nav-${page}`)) {
+        document.getElementById(`nav-${page}`).classList.add('active');
+      }
+      
+      // Scroll ke atas
+      window.scrollTo(0, 0);
+    }
+
+    // Storytelling Builder
+    function buildStory() {
+      const nama = document.getElementById('builderNama').value || 'Produk Lokal';
+      const daerah = document.getElementById('builderDaerah').value || 'Indonesia';
+      const budaya = document.getElementById('builderBudaya').value || 'kearifan lokal';
+      const bahan = document.getElementById('builderBahan').value || 'bahan-bahan pilihan';
+      const unik = document.getElementById('builderKeunikan').value || 'proses tradisional';
+      
+      document.getElementById('builderOutput').innerHTML = `
+        <div class="prose">
+          <p class="mb-3 text-lg">✨ <span class="font-bold">${nama}</span> adalah produk khas dari <span class="font-bold">${daerah}</span> yang dibuat dengan <span class="font-bold">${bahan}</span>.</p>
+          <p class="mb-3">Keunikan produk ini terletak pada <span class="font-bold">${unik}</span> yang diwariskan secara turun-temurun.</p>
+          <p>Nilai budaya <span class="font-bold">${budaya}</span> menjadi filosofi dalam setiap proses pembuatannya, menjadikan produk ini bukan sekadar komoditas, tetapi warisan budaya yang patut dilestarikan.</p>
+          <p class="mt-4 text-[#C2410C] font-semibold">#BanggaBuatanIndonesia #WarisanBudaya</p>
+        </div>
+      `;
+    }
+
+    // AI Story Assistant
+    function generateDeskripsi() {
+      const loading = document.getElementById('aiLoading');
+      const resultText = document.getElementById('aiResultText');
+      const taglineResult = document.getElementById('aiTaglineResult');
+      
+      loading.classList.remove('hidden');
+      resultText.innerHTML = '';
+      taglineResult.innerHTML = '';
+
+      setTimeout(() => {
+        const nama = document.getElementById('aiNama').value || 'Produk Lokal';
+        const daerah = document.getElementById('aiDaerah').value || 'Indonesia';
+        const bahan = document.getElementById('aiBahan').value || 'bahan-bahan pilihan';
+        const budaya = document.getElementById('aiBudaya').value || 'kearifan lokal';
+        const deskripsi = document.getElementById('aiDeskripsi').value || '';
+        
+        const hasil = `✨ ${nama} adalah produk unggulan dari ${daerah} yang dibuat dengan ${bahan} pilihan. ${deskripsi} Produk ini mengandung nilai budaya ${budaya} yang diwariskan secara turun-temurun. Cocok untuk oleh-oleh khas ${daerah} atau koleksi pribadi Anda. Setiap pembelian akan mendapatkan poin reward yang bisa ditukar dengan berbagai hadiah menarik!`;
+        
+        resultText.innerHTML = hasil;
+        loading.classList.add('hidden');
+      }, 1000);
+    }
+
+    function generateTagline() {
+      const loading = document.getElementById('aiLoading');
+      const taglineResult = document.getElementById('aiTaglineResult');
+      
+      loading.classList.remove('hidden');
+      taglineResult.innerHTML = '';
+
+      setTimeout(() => {
+        const nama = document.getElementById('aiNama').value || 'Produk Lokal';
+        const daerah = document.getElementById('aiDaerah').value || 'Indonesia';
+        
+        const taglines = [
+          `${nama}: Rasa ${daerah} yang Autentik`,
+          `${nama} – Warisan Rasa dari ${daerah}`,
+          `${nama}: Cerita ${daerah} dalam Setiap Sajian`,
+          `${nama} – Kehangatan Tradisi ${daerah}`,
+          `${nama}: Dibuat dengan Cinta, Diwariskan dengan Bangga`
+        ];
+        
+        const tagline = taglines[Math.floor(Math.random() * taglines.length)];
+        taglineResult.innerHTML = `🏷️ ${tagline}`;
+        loading.classList.add('hidden');
+      }, 800);
+    }
+
+    // Cultural Analyzer
+    function analyzeCulture() {
+      const input = document.getElementById('analyzerInput').value;
+      const keywords = input.split(',').map(k => k.trim()).filter(k => k.length > 0);
+      
+      let skor = 30; // skor dasar
+      if (keywords.length > 0) {
+        skor += keywords.length * 8; // +8 per kata kunci
+        const bonusWords = ['tradisi', 'budaya', 'adat', 'filosofi', 'warisan', 'leluhur', 'turun-temurun', 'ritual', 'upacara', 'makna'];
+        keywords.forEach(k => {
+          if (bonusWords.some(b => k.toLowerCase().includes(b))) skor += 15;
+        });
+      }
+      skor = Math.min(100, skor);
+      
+      document.getElementById('analyzerScore').innerHTML = skor;
+      document.getElementById('analyzerBar').style.width = skor + '%';
+      
+      let level = '';
+      let levelClass = '';
+      if (skor >= 71) {
+        level = 'Kuat (Siap Dipasarkan)';
+        levelClass = 'text-green-600';
+      } else if (skor >= 31) {
+        level = 'Cukup (Perlu Penguatan)';
+        levelClass = 'text-yellow-600';
+      } else {
+        level = 'Perlu Pengembangan';
+        levelClass = 'text-red-600';
+      }
+      document.getElementById('analyzerLevel').innerHTML = `<span class="${levelClass} font-bold">${level}</span>`;
+    }
+
+    // Dashboard
+    function updateDashboard() {
+      const umkm = Math.floor(Math.random() * 50) + 130;
+      const skor = Math.floor(Math.random() * 15) + 75;
+      const digital = Math.floor(Math.random() * 20) + 65;
+      
+      document.getElementById('statUmkm').innerHTML = umkm;
+      document.getElementById('statSkor').innerHTML = skor;
+      document.getElementById('statDigital').innerHTML = digital + '%';
+    }
+
+    // Leaderboard tab
+    function showLeaderboard(type) {
+      if (type === 'pembeli') {
+        document.getElementById('leaderboard-pembeli').classList.remove('hidden');
+        document.getElementById('leaderboard-penjual').classList.add('hidden');
+        document.getElementById('tab-pembeli').classList.add('bg-[#C2410C]', 'text-white');
+        document.getElementById('tab-pembeli').classList.remove('bg-gray-200', 'text-gray-700');
+        document.getElementById('tab-penjual').classList.remove('bg-[#C2410C]', 'text-white');
+        document.getElementById('tab-penjual').classList.add('bg-gray-200', 'text-gray-700');
+      } else {
+        document.getElementById('leaderboard-pembeli').classList.add('hidden');
+        document.getElementById('leaderboard-penjual').classList.remove('hidden');
+        document.getElementById('tab-penjual').classList.add('bg-[#C2410C]', 'text-white');
+        document.getElementById('tab-penjual').classList.remove('bg-gray-200', 'text-gray-700');
+        document.getElementById('tab-pembeli').classList.remove('bg-[#C2410C]', 'text-white');
+        document.getElementById('tab-pembeli').classList.add('bg-gray-200', 'text-gray-700');
+      }
+    }
+
+    // Set default
+    window.onload = function() {
+      // Set default leaderboard tab
+      showLeaderboard('pembeli');
+    }
+  </script>
+</body>
+</html>
